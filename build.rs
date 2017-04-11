@@ -18,9 +18,8 @@ impl CommandExt for Command {
         if status.success() {
             Ok(())
         } else {
-            Err(io::Error::new(io::ErrorKind::Other, format!("The command\n\
-            \t{:?}\n\
-            did not run successfully.", self)))
+            Err(io::Error::new(io::ErrorKind::Other,
+                               format!("The command\n\t{:?}\ndid not run successfully.", self)))
         }
     }
 }
@@ -51,7 +50,8 @@ fn build_lua(tooling: &gcc::Tool, source: &Path, build: &Path) -> io::Result<()>
     // Setting MAKE to match the command we invoke means that the VPATH and
     // Makefile path will be carried over when the Makefile invokes itself.
     let makefile = source.join("Makefile");
-    let make = OsString::from(format!("make -e -f {:?}", makefile.to_string_lossy().replace("\\", "/")));
+    let make = OsString::from(format!("make -e -f {:?}",
+                                      makefile.to_string_lossy().replace("\\", "/")));
 
     // call the makefile
     let mut command = Command::new("make");
@@ -64,7 +64,8 @@ fn build_lua(tooling: &gcc::Tool, source: &Path, build: &Path) -> io::Result<()>
         .env("CC", cc)
         .env("MYCFLAGS", cflags)
         .arg("-e")
-        .arg("-f").arg(makefile)
+        .arg("-f")
+        .arg(makefile)
         .arg(platform)
         .execute()
 }
@@ -104,10 +105,14 @@ fn prebuild() -> io::Result<()> {
     if !build_dir.join("glue.rs").exists() {
         // Compile and run glue.c
         let glue = build_dir.join("glue");
-        try!(config.include(&lua_dir).get_compiler().to_command()
-            .arg("-I").arg(&lua_dir)
+        try!(config.include(&lua_dir)
+            .get_compiler()
+            .to_command()
+            .arg("-I")
+            .arg(&lua_dir)
             .arg("src/glue/glue.c")
-            .arg("-o").arg(&glue)
+            .arg("-o")
+            .arg(&glue)
             .execute());
         try!(Command::new(glue)
             .arg(build_dir.join("glue.rs"))

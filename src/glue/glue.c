@@ -44,6 +44,43 @@ typedef struct rs_item {
   };
 } rs_item;
 
+
+// get back for lua 5.1
+#if LUAI_BITSINT >= 32
+#define LUAI_UINT32    unsigned int
+#define LUAI_INT32     int
+#define LUAI_MAXINT32  INT_MAX
+#define LUAI_UMEM      size_t
+#define LUAI_MEM       ptrdiff_t
+#else
+/* 16-bit ints */
+#define LUAI_UINT32    unsigned long
+#define LUAI_INT32     long
+#define LUAI_MAXINT32  LONG_MAX
+#define LUAI_UMEM      unsigned long
+#define LUAI_MEM       long
+#endif
+
+//
+#define LUA_VERSION_MAJOR      "5"
+#define LUA_VERSION_MINOR      "1"
+#define LUA_VERSION_NUM                501
+#define LUA_VERSION_RELEASE    "5"
+
+#define LUA_MAXINTEGER         LONG_MAX
+#define LUA_MININTEGER         LONG_MIN
+
+
+#define LUA_BITLIBNAME "bit32"
+#define LUAL_NUMSIZES  (sizeof(lua_Integer)*16 + sizeof(lua_Number))
+
+#define LUA_INTEGER_FRMLEN     "l" // XXX: not sure
+#define LUA_INTEGER_FMT                "%" LUA_INTEGER_FRMLEN "d"
+/* #define LUAI_UACINT            LUA_INTEGER */
+/* #define LUA_UNSIGNED           unsigned LUAI_UACINT */
+
+// end of fixes for lua5.1
+
 #define TY_INT     0
 #define TY_LUAINT  1
 #define TY_STR     2
@@ -184,21 +221,21 @@ int main(int argc, const char** argv) {
     // == luaconf.h ===========================================================
 
     RS_COMMENT("luaconf.h"),
-    RS_STR("LUA_VDIR", LUA_VDIR),
+    /* RS_STR("LUA_VDIR", LUA_VDIR), */
     RS_STR("LUA_PATH_DEFAULT", LUA_PATH_DEFAULT),
     RS_STR("LUA_CPATH_DEFAULT", LUA_CPATH_DEFAULT),
     RS_STR("LUA_DIRSEP", LUA_DIRSEP),
-    RS_INT("LUA_EXTRASPACE", LUA_EXTRASPACE),
+    /* RS_INT("LUA_EXTRASPACE", LUA_EXTRASPACE), */
     RS_INT("LUA_IDSIZE", LUA_IDSIZE),
-    RS_INT("LUAI_MAXSHORTLEN", LUAI_MAXSHORTLEN),
+    /* RS_INT("LUAI_MAXSHORTLEN", LUAI_MAXSHORTLEN), */
     RS_TYPE("LUA_KCONTEXT", xstr(LUA_KCONTEXT)),
     RS_INT("LUAI_BITSINT", LUAI_BITSINT),
     // LUA_INT32? LUAI_UMEM? LUAI_MEM?
-    RS_INT("LUAI_MAXSTACK", LUAI_MAXSTACK),
+    /* RS_INT("LUAI_MAXSTACK", LUAI_MAXSTACK), */
     RS_INT("LUAL_BUFFERSIZE", LUAL_BUFFERSIZE),
     RS_TYPE("LUA_NUMBER",
       sizeof(LUA_NUMBER) > sizeof(float) ? "c_double" : "c_float"),
-    RS_TYPE("LUA_UNSIGNED", rs_uint_type(sizeof(LUA_UNSIGNED))),
+    /* RS_TYPE("LUA_UNSIGNED", rs_uint_type(sizeof(LUA_UNSIGNED))), */
     RS_TYPE("LUA_INTEGER", rs_int_type(sizeof(LUA_INTEGER))),
     RS_LUAINT("LUA_MAXINTEGER", LUA_MAXINTEGER),
     RS_LUAINT("LUA_MININTEGER", LUA_MININTEGER),
@@ -223,14 +260,14 @@ int main(int argc, const char** argv) {
     RS_STR("LUA_FILEHANDLE", LUA_FILEHANDLE),
 
     // == lualib.h ============================================================
-    
+
     RS_COMMENT("lualib.h"),
     RS_STR("LUA_COLIBNAME", LUA_COLIBNAME),
     RS_STR("LUA_TABLIBNAME", LUA_TABLIBNAME),
     RS_STR("LUA_IOLIBNAME", LUA_IOLIBNAME),
     RS_STR("LUA_OSLIBNAME", LUA_OSLIBNAME),
     RS_STR("LUA_STRLIBNAME", LUA_STRLIBNAME),
-    RS_STR("LUA_UTF8LIBNAME", LUA_UTF8LIBNAME),
+    /* RS_STR("LUA_UTF8LIBNAME", LUA_UTF8LIBNAME), */
     RS_STR("LUA_BITLIBNAME", LUA_BITLIBNAME),
     RS_STR("LUA_MATHLIBNAME", LUA_MATHLIBNAME),
     RS_STR("LUA_DBLIBNAME", LUA_DBLIBNAME),
